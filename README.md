@@ -15,3 +15,27 @@ model oluşturmayu denediğim bir notebook.
 
 7 farklı lokasyonun Radyans(Ne kadar Güneş vuruyor verisi) ile Sıcaklık verisinin Türkiye'de en yüksek enerji üretimine sahip santrallerinin üretimleri ile 
 korelasyonunun ve santrallerin üretimlerinin kendi aralarındaki korelasyonunu incelediğimiz bir notebook
+
+## Türkiye Haziran Ayı Ges Üretim Tahminleme
+
+Bu klasörde bulunan kodlar kullanılarak Türkiye'nin Haziran ayı enerji üretimine göre tahminleme yapılabilir.
+
+### Ges_Weather_RnR 
+
+Bu kodda incelemek istediğiniz santralin ismini ve tarihi girerek modele hazır hale getirebilirseniz. Veya birden fazla santralleri toplayabilirsiniz.
+
+### Gesler
+
+Bu kod ana kodda kullanılan bütün fonksiyonları içerir
+
+### Upload Data
+Veriyi yükleyen kod
+
+### RF
+Random Forest ile tahminlemede bulunmak için Grid Search ile parametreleri ayarlayan kod bu klasörde. 
+Diğer algoritmalar da bu dosyaya eklenecektir.
+
+
+### indir
+
+Bu kodu kullanarak Epiaş'dan verileri indirebilirsiniz.
