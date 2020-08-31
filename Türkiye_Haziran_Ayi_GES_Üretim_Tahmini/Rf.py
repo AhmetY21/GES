@@ -3,6 +3,8 @@ from sklearn.ensemble import RandomForestRegressor
 import numpy as np
 
 from sklearn.model_selection import RandomizedSearchCV
+
+#Grid search
 n_estimators = [int(x) for x in np.linspace(start = 200, stop = 2000, num = 10)]
 max_features = ['auto', 'sqrt']
 max_depth = [int(x) for x in np.linspace(10, 110, num = 11)]

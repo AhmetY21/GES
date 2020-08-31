@@ -11,6 +11,9 @@ pp = pprint.PrettyPrinter(width=41,depth=6, compact=True)
 data=Upload_data.data
 
 wr=Upload_data.wr
+
+#Hava durumu verisini lokasyon bazında sınıflandırdım
+
 locs=wr['Yer'].unique()
 
 wr1=wr[wr['Yer']==locs[0]]
@@ -57,18 +60,24 @@ test_stoper='2020-07-01'
 
 dates=pd.date_range(start=train_starter,end=train_stoper,freq='H')
 
+#İstenilen santralin verisini işlenebilir hale getiriyoruz.
+
 train_data_cin,test_data_cin=Gesler.data_prep(data,'CINGILLI',train_starter,train_stoper,test_starter,test_stoper)
 train_data_omc,test_data_omc=Gesler.data_prep(data,'OMICRONERCIS',train_starter,train_stoper,test_starter,test_stoper)
 
 
+#Bu kısımda daha fazla santral toplanılabilir buradaki seçim kriterim en çok üreten ve farklı lokasyonlardan olması şeklinde oldu
 
 train_top=train_data_cin.copy()
 train_top['Güneş']=train_data_cin['Güneş']+train_data_omc['Güneş']
 test_top=test_data_cin.copy()
 test_top['Güneş']=test_data_cin['Güneş']+test_data_omc['Güneş']
 
+#Burada veri setimize saat ve günü de değişken olarak ekliyoruz
 wr2_test=Gesler.f_ekle(wr2_test)
 train_top=Gesler.f_ekle(train_top)
+
+#Burada Hava durumu verisi ile güneş enerji üretim verisini aynı veri setinde birleştiriyoruz
 
 train_top=pd.merge(train_top,wr2_train,how='outer',left_index=True, right_index=True)
 test_top=pd.merge(test_top,wr2_test,how='outer',left_index=True, right_index=True)
@@ -76,18 +85,29 @@ test_top=pd.merge(test_top,wr2_test,how='outer',left_index=True, right_index=Tru
 x_test,y_test=Gesler.split(test_top)
 x_train,y_train=Gesler.split(train_top)
 
+# Test setinin değerlerini kaydediyoruz bura sonra da gelebilirdi
+
 real=test_top['Güneş'].values
+
+#Modelimizi train etmek istediğimiz algoritmayı çağırıyoruz.
+# Saat ve gün verisini de ekledikten sonra
+# kırılımları olan bir veri setini dönüştüğünü düşündüğümden direk random forest uyguladım diğer algoritmaları da deneyeceğim
+
 
 Rf.rf_random.fit(x_train, y_train)
 preds_rf=Rf.rf_random.predict(wr2_test)
 
 predictions=wr2_test.copy()
 predictions['Güneş']=preds_rf
+
+#Algoritma içinde panelize işlemi yapmadığımdan gece yarısında bile cok düşük de olsa bir üretim tahminliyor.
+#Bir treshold belirledim onun altını sıfırlıyor.
+
 predictions['Güneş']=predictions['Güneş'].apply(lambda x: 0 if x<0.004 else x)
 preds_rf=predictions['Güneş'].values
 
 
-
+#Değerimiz de fena gelmiyor
 print(mean_squared_error(real, preds_rf))
 
 

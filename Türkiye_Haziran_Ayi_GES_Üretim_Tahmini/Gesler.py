@@ -1,10 +1,17 @@
 import pandas as pd
 import Gesler
+
+#yazdığım tüm fonksiyonları tek bir yerde topladım ne kadar object oriented tartışılır
+
+#Hava durumu verisindeki timestampi çözemediğimden index kullanarak 2 aylık veri çektim.
+# Bu kısım değiştirilecek
 def son_iki(df):
     iki=df.iloc[-30*24-2-7:25558-7]
     bir=df.iloc[(-62*24)-3-6:-31*24-2-6]
 
     return bir,iki
+
+#seçilen santralin son iki aylık verisi
 
 def train_test(df):
     train_start=df.index[(-91*24)-23]
@@ -15,7 +22,7 @@ def train_test(df):
 
     return train_start,train_stop,test_start,test_stop
 
-
+#Veriye kendi belirlediğim ayın datetime verisini index olarak giriyor
 def ges_ayar(df,starter,stoper):
     A=df['Güneş'].values
     dates=pd.date_range(start=starter,end=stoper,freq='H')  #starter = '2020-05-01' stoper = '2020-06-01'
@@ -27,7 +34,7 @@ def ges_ayar(df,starter,stoper):
     #df['Güneş'].plot()
     return df
 
-
+#Bu EDA aşamasında her bir santralin lokasyonlarla olan ilişkisini ayrı ayrı incelemek için  yazdığım bir fonksiyon
 def wr_en(weather,ges):
     z=pd.merge(weather,ges,how='outer',left_index=True, right_index=True)
    # print("----------------------------")
@@ -40,6 +47,7 @@ def wr_en(weather,ges):
     #print("----------------------------")
     return x
 
+#Hava durumunu iki aylık indexli hale getiriyor
 
 def wr_ayar(df):
     df1,df2=son_iki(df)
@@ -72,7 +80,7 @@ def wr_ayar(df):
     ##axs[1, 1].set_title('Test Temp')
 
     return df1,df2
-
+#Santralleri belirtilen tarihler arasında filtreliyor
 
 def ges_ayar(df,starter,stoper):
     A=df['Güneş'].values
@@ -96,7 +104,7 @@ def split(df):
     print(x_train.shape)
 
     return x_train,y_train
-
+#gün ve saati feature olarak ekliyor
 def f_ekle(df):
 
     hour=pd.DataFrame(df.index.hour)
@@ -106,6 +114,7 @@ def f_ekle(df):
     df['Gün']=day.values
     return df
 
+#bütün fonksiyonları kullanarak santralleri işlenebilir hale getiriyor
 def data_prep(data,ad,train_starter,train_stoper,test_starter,test_stoper):
     data_new=data[data['GES']==ad]
     train_start,train_stop,test_start,test_stop=Gesler.train_test(data_new)
